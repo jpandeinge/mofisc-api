@@ -1,0 +1,22 @@
+[project]
+name = "mofisc-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[tool.uvicorn]
+reload = true
+reload-excludes = ["venv/*", ".venv/*", "__pycache__/*", "*.pyc", "*.pyo", "wandb/*", "ml_model/*"]
+reload-dirs = ["api"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.black]
+line-length = 88
+target-version = ['py311']

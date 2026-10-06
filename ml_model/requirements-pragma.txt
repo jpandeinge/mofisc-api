@@ -1,0 +1,3 @@
+# Separate from the API runtime: Pragmatiq is an offline representation pipeline.
+# Exact beta pin keeps tokenizer/checkpoint behavior reproducible.
+pragmatiq==0.1.0b4

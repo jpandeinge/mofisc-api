@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "pre-push: 'uv' not found; skipping format checks." >&2
+  exit 0
+fi
+
+echo "pre-push: running backend formatters (isort, black)…" >&2
+uv run isort api/
+uv run black api/

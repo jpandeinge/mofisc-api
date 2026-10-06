@@ -1,0 +1,152 @@
+rules_id,order,display_name,display_name_detail,regex_include,merchant_name,category,subcategory
+99,0,Revolut,Revolut card top-up,(?i)\bpos\s+purchase\b.*\brevolut\b,Revolut,Cash & Transfer,Send Money
+100,1,Food Lover's Market,Fruit and Veg,fruit and veg,Food Lover's Market,Groceries,Supermarket
+101,2,Food Lover's Market,Food Lovers Market,\s*flm\s+(?:hilltop|wernhill)\s*$,Food Lover's Market,Groceries,Supermarket
+102,3,Ok Minimark,Ok Minimark,(?i)\bok\b\s+(foods|grocer|minimark|express|urban)\b(?:\s+([\w\s]+))?,Ok Minimark,Groceries,Supermarket
+103,4,Cash & Carry,Cash & Carry,cash\s+and\s*carry,Cash & Carry,Groceries,Wholesale
+104,5,Namica Supermarket,Namica Supermarket & Bakery,\s*namica\s*(?:supermark(?:et)?)?\s*$,Namica Supermarket,Groceries,Wholesale
+105,6,Shoprite,Shoprite,\s*shoprite\b,Shoprite,Groceries,Supermarket
+106,7,Superspar,SuperSpar,\s*super\s*spar\b,Superspar,Groceries,Supermarket
+107,8,Spar,Spar Namibia,\s*spar\b,Spar,Groceries,Supermarket
+108,9,Checkers,Checkers Liquor Store,\s*checkers\s+(?:ls|liquor(?:\s+store)?)\b,Checkers Liquor Store,Alcohol & Tobacco,Liquor Store
+109,10,Checkers,Checkers,\s*checkers\b,Checkers,Groceries,Supermarket
+110,11,Woermann Brock,Woermann Brock,(?i)\b(woermann\s*brock|w\s*&\s*b|wb)\b(?:\s+([\w\s]+))?,Woermann Brock,Groceries,Supermarket
+111,12,Pick 'n Pay,Pick 'n Pay,(?i)\b(?:pick[\s\-]*(?:and|n|&)[\s\-]*pay|p[\s\-]*n[\s\-]*p)(?:\s+fam)?\b,Pick 'n Pay,Groceries,Supermarket
+112,13,Choppies,Choppies,\s+choppies,Choppies,Groceries,Supermarket
+113,14,Metro,Metro Cash & Carry,(?i)\bmetro\b.*(cash|carry|wholesale|distr),Metro,Groceries,Wholesale
+114,15,Model,Model,(?i)\bmodel\b\s+([\w\s]+),Model,Groceries,Supermarket
+115,16,B1 City Foods,B1 City Foods,(?i)\bb1\s+city\s+foods\b(?:\s+cc)?,B1 City Foods,Groceries,Supermarket
+116,17,Okashandja Trading,Okashandja Trading,(?i)okashandja\s+trading,Okashandja Trading,Alcohol & Tobacco,Liquor Store
+117,18,Topa,Tops,(?i)\btops\b(?:\s+(?:at\s+spar|the\s+grove|grove))?,Tops,Alcohol & Tobacco,Liquor Store
+118,19,Megasave,Megasave,(?i)megasave,Megasave,Groceries,Supermarket
+119,20,Knock Out Supermarket,Knock Out Supermarket,(?i)knock\s+out\s+supermark(?:et)?,Knock Out Supermarket,Groceries,Supermarket
+120,21,Kuiseb Shop 4,Kuiseb Shop 4,(?i)kuiseb\s+shop\s+4\s+valu[e]*,Kuiseb Shop 4,Groceries,Supermarket
+121,22,Okalunga Pick n Shop,Okalunga Pick n Shop,(?i)okalunga\s+pick\s+n\s+shop,Okalunga Pick n Shop,Groceries,Supermarket
+122,23,Vinetta Supermarket,Vinetta Supermarket,(?)vinetta\s+supermark(?:et)?,Vinetta Supermarket,Groceries,Supermarket
+300,301,Wika Service Centre,Wika Service Station,(?i)wika\s+service\s+station,Wika Service Station,Transportation,Fuel
+301,302,Kutuai Service Station,Kutuai Service Station,(?i)kutuai\s+service\s+stat(?:ion)?,Kutuai Service Station,Transportation,Fuel
+302,303,Slabbbert Fuels Puma,Slabbbert Fuels Puma,(?i)slabbert\s+fuels(?:\s+puma)?,Slabbbert Fuels Puma,Transportation,Fuel
+303,304,Indongo Auto,Indongo Auto,(?i)indongo\s+auto,Indongo Auto,Transportation,Automotive
+304,305,Thomas Filling Station,Thomas Filling Station,(?i)thomas\s+filling\s+stat(?:ion)?,Thomas Filling Station,Transportation,Fuel
+305,306,Avash Car Rental,Avash Car Rental,(?i)avash\s+car\s+rental,Avash Car Rental,Transportation,Car Rental
+306,307,Olympia Service Station,Olympia Service Station,(?i)olympia\s+service\s+stat(?:ion)?,Olympia Service Station,Transportation,Fuel
+307,308,Omega Service Station,Omega Service Station,(?i)omega\s+service\s+sta(?:ion)?,Omega Service Station,Transportation,Fuel
+308,309,Oshakati Shell Fuel,Oshakati Shell Fuel,(?i)oshakati\s+shell\s+fuel,Oshakati Shell Fuel,Transportation,Fuel
+500,501,Standard Bank,Standard Bank ATM,(?i)\brev\b|\breversal\b,Standard Bank,Cash & Transfer,Reversal
+501,502,Standard Bank,Standard Bank ATM,(?i)\batm\s+rt\s+cash\s+deposit\b,Standard Bank,Cash & Transfer,Deposit
+502,503,Standard Bank,Standard Bank,(?i)mbpmt/bluevoucher\s+issuance\s+(\d{12}),Standard Bank,Cash & Transfer,Send Money
+503,504,Standard Bank,Standard Bank,(?i)\b(credit|cr)\s+transfer\b,Standard Bank,Cash & Transfer,Send Money
+504,505,Standard Bank,Standard Bank,(?i)\b(credit|cr)\s+transfer\b,Standard Bank,Cash & Transfer,Received Money
+505,506,Standard Bank,Standard Bank Internet Banking,(?i)ibpmt/([\w\s&]+),Standard Bank,Cash & Transfer,Send Money
+506,507,Standard Bank,Standard Bank,(?i)cash\s+deposit\s+([\w\s]+),Standard Bank,Cash Deposit,Deposit
+507,508,Standard Bank,Standard Bank ATM,(?i)atm\s+instant\s+money\s+redemption\s+.*?\s+(\w+\s?\d?)$,Standard Bank,Cash & Transfer,Withdrawal
+508,509,Standard Bank,Standard Bank ATM,(?i)\b(atm|cash|withdrawal|wdl|wtd)\b,Standard Bank,Cash & Transfer,Withdrawal
+509,510,Standard Bank,Standard Bank,(?i)bol\s+payment\s+(?:to\s+)?([\w\s&]+),Standard Bank,Cash & Transfer,Electronic Payment
+510,511,FNB,FNB,(?i)(?:send\s+money\s+dr\s+send|pay\s*2\s*cell\s+debit\s+p2c|fnb\s+app\s+transfer\s+to\s+interbanking)\s*(\d*),FNB,Transfer,Send Money
+511,512,FNB,FNB,(?i)adt\s+cash\s+deposit,FNB,Cash Deposit,Deposit
+512,513,Standard Bank,Standard Bank,(?i)ibpmt/saving\b,Standard Bank,Transfer,Savings
+700,701,Plastilon Packaging,Plastilon Packaging,(?i)\bplastilon\b(?:\s+packaging)?,Plastilon Packaging,Shopping,Supplies
+701,702,Pep,Pep Store,(?i)\bpep\b(?:\s+stores?)?,Pep,Shopping,Clothing & Accessories
+702,703,Game,Game Discount World,(?i)\bgame\s+discount\s+world\b|\bgame\b,Game,Shopping,Electronics & Home
+703,704,Mr Price,Mr Price,(?i)\b(mr\s*price|mrp)\b(?:\s*(home|sport))?,Mr Price,Shopping,Clothing & Accessories
+704,705,Miladys,Miladys,(?i)\bmiladys\b(?:\s+(\d+))?\s+([\w\s]+?)(?:\s+na)?$,Miladys,Shopping,Clothing & Accessories
+705,706,Truworths,Truworths,(?i)truworths,Truworths,Shopping,Clothing & Accessories
+706,707,Imex Commodity traders,Imex Commodity traders,(?i)imex\s+commodity\s+traders,Imex Commodity traders,Shopping,Warehousing
+707,708,Ackermans,Ackermans,(?i)ackermans,Ackermans,Shopping,Clothing & Accessories
+1000,1001,Clicks,Clicks,(?i)\bclicks\b,Clicks,Health & Beauty,Personal Care
+1001,1002,Dis-Chem,Dis-Chem,(?i)dis-?chem,Dis-Chem,Health & Beauty,Personal Care
+1002,1003,Medicine World,Medicine World,(?i)medicine\s+world,Medicine World,Health & Beauty,Personal Care
+1003,1004,The Body Shop,The Body Shop,(?i)body\s+shop,The Body Shop,Health & Beauty,Personal Care
+1004,1005,Narraville Pharmacy,Narraville Pharmacy,(?i)\bnarraville\s+pharm(?:acy)?\b,Narraville Pharmacy,Health & Beauty,Pharmacy
+1005,1006,Auas Valley Pharmacy,Auas Valley Pharmacy,(?i)\bauas\s+valley\s+pharmacy\b,Auas Valley Pharmacy,Health & Beauty,Pharmacy
+1006,1007,Camelot Invest Wellness,Camelot Invest Wellness,(?i)camelot\s+invest,Camelot Invest Wellness,Health & Beauty,Personal Care
+1007,1008,Tuvelula Pharmacy,Tuvelula Pharmacy,(?i)tuvelula\s+pharmacy,Tuvelula Pharmacy,Health & Beauty,Pharmacy
+1100,1101,Dr Nghalipoh,Dr Nghalipo,(?i)(?:pos\s+purchase|debit)?\s*dr\s+(nghalipoh|ngalipoh)\b(?:\s+\w+)*,Dr Nghalipoh,Health & Wellness,Doctor Clinic
+1101,1102,Life Diagonistic Radiology,Life Diagonistic Radiology,(?i)dr\s+fynn\s+(?:and\s+)?associates,Life Diagonistic Radiology,Health & Wellness,Medical Specialist
+1300,1301,Erongo Red,Erongo Red,"(?i)(?:pay\s+)?(?:ewater|erongore|ered)\w*\s+(\d{6,20})",Erongo Red,Bills & Utilities,Municipality
+1301,1302,Old Mutual,Old Mutual Life Assrance,(?i)sbxxomlacn\s*(\d+),Old Mutiual,Bills & Utilities,Insurance
+1302,1303,MTC Namibia,MTC Namibia,(?i).*\b(mtc|081\d{7}|26481\d{7})\b.*,MTC Namibia,Bills & Utilities,Airtime
+1303,1304,Telecom Namibia,Telecom Namibia,(?i).*\b(tn|085\d{7}|26485\d{7})\b.*,Telecom Namibia,Bills & Utilities,Airtime
+1304,1305,Standard Bank,Standard Bank,(?i)^dr\b.*(?:funeral|policy).*,Standard Bank,Bills & Utilities,Insurance
+1305,1306,Cenored,Cenored,(?i).*(?:e\s*&?\s*water|e&amp;water)\s+(cenored)(?:\s*eb)?\s*(?:ussd)?[:\s]+(\d+),Cenored,Bills & Utilities,Municipality
+1306,1307,Nored,Nored,(?i).*(?:e\s*&?\s*water|e&amp;water)\s+(nored)(?:\s*eb)?\s*(?:ussd)?[:\s]+(\d+),Nored,Bills & Utilities,Municipality
+1307,1308,Santam,Santam,(?i)santam-?([a-z0-9]+),Santam,Bills & Utilities,Insurance
+1308,1309,FNB,FNB,(?i)\bfnxxfnbinsn\b,FNB,Bills & Utilities,Insurance
+1309,1310,Momentum,Momentum,(?i)fnxx\s*mommetpo,Momentum,Bills & Utilities,Insurance
+1310,1311,Hollard Life,Hollard Life,(?i)fnxx\s*holifes,Hollard Life,Bills & Utilities,Insurance
+1311,1312,Exergy,Exergy,(?i)exergy\s+policy\s+premium,Exergy,Bills & Utilities,Insurance
+1400,1401,Standard Bank,Standard Bank,(?i)\b(sbxxsbnrcp|sbxxnrcplo|nrcplo)\b|loan\s+(?:account\s+)?payments?\s+for(?:\s+account)?,Standard Bank,Loans,Personal Loan
+1401,1402,Old Mutual,Old Mutual Finance,(?i)sbxxomfinn\s*(\d+)|omfinnam\s+omfin(\d+),Old Mutual,Loans,Personal Loan
+1404,1405,Game,Game,(?i)sbxxgameac-?(\d+)?,Game,Loans,Store Account
+1405,1406,Nictus,Nictus,(?i)sbxxnictus(\d+)?(?:-?\d+)?(?:-?([a-z]+))?,Nictus,Loans,Store Account
+1406,1407,Focus Finanace Namibia,Focus Finance Namibia,(?i)fnrpfocus[a-z0-9]?(\d+),Focus Finance Namibia,Loans,Personal Loan
+1407,1408,Standard Bank,Standard Bank,(?i)sbxxvafcol\d+.*,Standard Bank,Loans,Vehicle & Asset Finance
+1408,1409,Standard Bank,Standard Bank,(?i)\bsbxxhomelo\b,Standard Bank,Mortgage,Home Loan
+1409,1410,Standard Bank,Standard Bank,(?i)\b(sbxxsbncrc|card)\b,Standard Bank,Loans,Credit Card
+1410,1411,Funmart,Funmart,(?i)fnxx\s*furnna,Funmart,Loans,Store Account
+1411,1412,Hmack,Hmack,(?i)ibpmt/hm\s+loan|hmack\s+loan,Hmack,Loans,Personal Loan
+1412,1413,,,(?i)home\s+payment,,Mortgage,Home Loan
+1413,1414,FNB,FNB,(?i)fnxxcardis\s+\d+,FNB,Loans,Credit Card
+1600,1601,Nimble Group,Nimble Group,(?i)sbxxnimble(\d+),Nimble Group,Financial Obligations,Debt Repayment
+1601,1602,Legals,Legals,(?i)tbxxlegals\d*([a-z0-9]+),Legals,Financial Obligations,Debt Repayment
+1602,1603,Mani,Mani,(?i)fnrpmanioo,Mani,Financial Obligations,Debt Repayment
+1603,1604,Dion & Rejoice,Dion & Rejoice,(?i)fnrpdion,Dion & Rejoice,Financial Obligations,Debt Repayment
+1604,1605,Express Credit,Express Credit,(?i)fnrpexpres,Express Credit,Financial Obligations,Debt Repayment
+1605,1606,Rev Sol,Rev Sol,(?i)fnrprevsol,Rev Sol,Financial Obligations,Debt Repayment
+1606,1607,Finaid,Finaid Namibia,(?i)fnrpfinaid(\d+),Finaid,Financial Obligations,Debt Repayment
+1607,1608,Janeel Financial Services,Janeel Financial Services,(?i)janeel,Janeel Financial Services,Financial Obligations,Debt Repayment
+1608,1609,Tripod,Tripod,(?i)tripodc,Tripod,Financial Obligations,Debt Repayment
+1700,1701,GIPF,GIPF,(?i)gipf/([a-z0-9]+),GIPF,Income,Pension & Benefits
+1701,1702,FNB,FNB,(?i)encr\s+inward|pay\s*2\s*cell\s+credit,FNB,Income,Personal Transfer
+1702,1703,Standard Bank,Standard Bank,(?i)bol\s+payment\s+sbnrf.*,Standard Bank,Income,Pension
+1703,1704,,,(?i)cashfocus\s+axis.*,,Income,Salary & Wages
+1800,1801,Standard Bank,Standard Bank,(?i)fee\s*-\s*pos\s*purchase\s*\((domestic|international)\),Standard Bank,Bank Charges,Fees and Taxes
+1801,1802,Nedbank,Nedbank,(?i)(\d+)?\s*stamp\s*duty\s*(\d+),Nedbank,Bank Charges,Fees and Taxes
+1802,1803,Nedbank,Nedbank,(?i)\s*service\s*fee,Nedbank,Bank Charges,Account Maintanance
+1803,1804,FNB,FNB,(?i)bank\s*fees|\bint(?:erest)?\s+on\s+credit\s+balance\b,FNB,Bank Charges,Fees and Taxes
+1804,1805,FNB,FNB,(?i)transaction\s*duty,FNB,Bank Charges,Tax Levy
+1805,1806,Standard Bank,Standard Bank,(?i)access\s+fee\s*-\s*(\d+)\s+(\d+),Standard Bank,Bank Charges,Fees and Taxes
+1806,1807,Standard Bank,Standard Bank,(?i)^(credit|debit)\s+vat/([\w\s/]+),Standard Bank,Bank Charges,Fees and Taxes
+1807,1808,Standard Bank,Standard Bank,(?i)monthly\s+management\s+fee\s*:\s*(\d{2}-\d{2}-\d{4}),Standard Bank,Bank Charges,Account Maintanance
+1808,1809,Standard Bank,Standard Bank,(?i)fee\s*-\s*replacement\s+card,Standard Bank,Bank Charges,Card Replacement
+1809,1810,Standard Bank,Standard Bank,(?i)\bblue\s+wallet\b(?:\s+transaction)?\s+fee,Standard Bank,Bank Charges,Fees and Taxes
+2000,2001,Africa Window Films,Africa Windows Film cc,(?i)\bafrica\s+window\s+films\b(?:\s+cc)?,Africa Windows Film,Automotive,Maintennace & Accessories
+2001,2002,Cymot,Cymot,(?i)cymot\b.*,Cymot,Automotive,Automotive & Outdoors
+2200,2201,Hungry Lion,Hungry Lion,(?i)\bhungry\s+lion\b(?:\s+([\w\s]+))?,Hungry Lion,Food & Drink,Fast Food
+2201,2202,KFC,KFC,(?i)kfc,KFC,Food & Drink,Fast Food
+2202,2203,Galitos,Galitos,(?i)galito'?s(?:\s+restaurant)?,Galitos,Food & Drink,Fast Food
+2203,2204,King Pie,King Pie,(?i)king\s+pie,King Pie,Food & Drink,Fast Food
+2204,2205,The Biltong Shop,The Biltong Shop,(?i)the\s+biltong\s+shop,The Biltong Shop,Food & Drink,Fast Food
+2500,2501,Generic Employer,Generic Employer,(?i)^(salaries\s+[a-z]+\s+\d{4}|ont\s+salary|ibpmt\/.*wages)$,Generic Employer,Salary,Salary
+2501,2502,FNB,FNB,(?i)^fnb\s+ob\s+pmt\s+fnbsalary\d*,FNB,Salary,Salary
+2502,2503,PSTBet,PSTBet,(?i)pstbetsalary,PSTBet,Salary,Salary
+2503,2504,Namwater,Namwater,(?i)namwater\s*\d*,Namwater,Salary,Salary
+2504,2505,Standard Bank,Standard Bank,(?i)^remuneration.*,Standard Bank,Salary,Salary
+2505,2506,Office of the President,Office of the President,(?i)ont\s+salary.*,Office of the President,Salary,Salary
+2506,2507,,,(?i)oatv[-/ ]*salary.*,,Salary,Salary
+2507,2508,NFLS,NFLS,(?i)n[fl]{2}s\s*salary.*,NFLS,Salary,Salary
+2700,2701,Temperature Lounge,Temperature Lounge,(?i)temperature\s+lounge,Temperature Lounge,Lifestyle,Nightlife
+2701,2702,Rands Street Car Wash,Vasco Enterprise,(?i)vasco\s+enterprise,Randstreet Car Wash,Lifestyle,Nightlife
+2702,2703,Shanghai Park Lounge,Shanghai Park Lounge,(?i)shanghai\s+park\s+lounge,Shanghai Park Lounge,Lifestyle,Nightlife
+3000,3001,Sanlam,Sanlam,(?i)invest\s+nam\.?unit\s+trust,Sanlam,Investments,Unit Trusts
+3001,3002,Old Mutual,Old Mutual,(?i)ominvb,Old Mutual,Investments,Investments
+3002,3003,Standard Bank,Standard Bank,(?i)sbxxsbnwtp,Standard Bank,Investments,Unit Trusts
+3003,3004,,,(?i).*\bsaving[s]?\b.*,,Savings,Savings
+3200,3201,Kambwa Trading,Kambwa Trading,(?i)kambwa\s+trading,Kambwa Trading,Housing,Building Supplies
+3201,3202,Hardap Building  Supplies,Hardap Building  Supplies,(?i)hardap\s+building\s+suppli,Hardap Building  Supplies,Housing,Building Supplies
+3202,3203,Megabuild,Megabuild,(?)megabuild,Megabuild,Housing,Building Supplies
+3500,3501,Seattle Coffee Shop,Seattle Coffee Shop,(?i)seattle\s+coffee,Seattle Coffee Shop,Leisure,Café
+3501,3502,Taste Bistro,Taste Bistro,(?i)pos\s+purchase\s+taste\b,Taste Bistro,Leisure,Restaurant
+3502,3503,Catering & Contract,Catering & Contract,(?i)catering\s+and\s+contra,Catering & Contract,Leisure,Vendor
+3503,3504,Alves Coffee Shop,Alves Coffee Shop,(?i)alves\s+coffee,Alves Coffee Shop,Leisure,Café
+3504,3505,Mountain Eagle Spur,Mountain Eagle Spur,(?i)mountain\s+eagle\s+spur,Mountain Eagle Spur,Leisure,Restaurant
+3505,3506,Gabriele's Italian Pizzeria,Gabriele's Italian Pizzeria,(?i)gabrieles\s+italian,Gabriele's Italian Pizzeria,Leisure,Restaurant
+4000,4001,Home Corp,Home Corp,(?i)home\s+corp,Home Corp,Home & Utilities,Furniture & Appliances
+4001,4002,Furnmart,Furnmart,(?i)furn\s+mart,Furnmart,Home & Utilities,Furniture & Appliances
+4002,4003,Agra,Agra,(?i)agra|agr\b,Agra,Home & Utilities,Agricultural Retail
+4003,4004,Swakop Electrical Supplies,Swakop Electrical Supplies,(?i)swakop\s+electr[ical]*\s+suppl[ies]*,Swakop Electrical Supplies,Home & Utilities,Hardware
+4200,4201,Canvas Outdoor Centre,Canvas Outdoor Centre,(?i)canvas\s+outdoor\s+cent[re]*,Canvas Outdoor Centre,Outdoor & Recreation,Adventure Gear
+4201,4203,Safari Den,Safari Den,(?i)(?:agra\s+)?safari\s+den,Safari Den,Outdoor & Recreation,Hunting & Camping
+4500,4501,Africa Insights,Africa Insights,(?i)african\s+insight(?:\s+safaris|namibia)?,Africa Insights,Travel,Tours & Safaris
+4501,4502,Ombinda Lodge,Ombinda Lodge,"(?i)ombinda\s+(country\s+)?lodge""",Ombinda Lodge,Travel,Lodges & Resorts
+4800,4801,Icare Institute,Icare Institute,(?i)mbpmt/icare\b.*,Icare Institute,Education,Higher Education

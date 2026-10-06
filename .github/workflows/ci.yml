@@ -1,0 +1,231 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '23 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  lint:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-lint-${{ hashFiles('requirements-lint.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-lint-
+            ${{ runner.os }}-pip-
+
+      - name: Install linting dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-lint.txt
+
+      - name: Check code formatting with Black
+        run: black --check --diff api/
+
+      - name: Check import sorting with isort
+        run: isort --check-only --diff api/
+
+      - name: Run flake8 linter
+        run: |
+          flake8 api/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 api/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Run type checking with mypy
+        run: mypy api/ --ignore-missing-imports --no-error-summary || true
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install security tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit pip-audit
+
+      - name: Run Bandit security linter
+        run: bandit -r api/ -ll -ii -x api/app/tests
+
+      - name: Check dependencies for vulnerabilities
+        run: |
+          python scripts/check_dependency_pins.py
+          pip-audit --require-hashes --disable-pip -r requirements.lock
+          pip-audit --require-hashes --disable-pip -r deploy/huggingface/pfc_v4/requirements.txt
+          pip-audit --require-hashes --disable-pip -r ml_model/requirements.txt
+          pip-audit --require-hashes --disable-pip -r ml_model/requirements-pragma.lock
+
+  functions-security:
+    name: Firebase Functions Tests and Audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firebase-functions/functions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: firebase-functions/functions/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm audit --audit-level=low
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: [lint]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_galahad
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-test-${{ hashFiles('requirements.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-test-
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --require-hashes -r requirements.lock
+          pip install pytest pytest-cov pytest-asyncio httpx requests
+
+      - name: Run tests with coverage
+        env:
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_galahad
+          ENVIRONMENT: test
+          SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+          JWT_SECRET_KEY: ${{ secrets.TEST_JWT_SECRET_KEY }}
+          FIREBASE_WEB_API_KEY: ${{ secrets.TEST_FIREBASE_WEB_API_KEY }}
+          FIREBASE_CREDENTIALS_BASE64: ${{ secrets.TEST_FIREBASE_CREDENTIALS_BASE64 }}
+          SENDGRID_API_KEY: ${{ secrets.TEST_SENDGRID_API_KEY }}
+          FROM_EMAIL: ${{ secrets.TEST_FROM_EMAIL }}
+          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.TEST_SUPABASE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          pytest tests/ -v --cov=api --cov-report=xml --cov-report=term-missing --tb=short
+
+      - name: Verify optional private model when present
+        run: |
+          if [ -f api/app/resources/models/pfc_v4/encoder/model.safetensors ]; then
+            python scripts/check_model_runtime.py
+          else
+            echo "Private model artifact not present; integration tests cover the public adapter."
+          fi
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 7
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+        continue-on-error: true
+
+  # build:
+  #   name: Build Docker Image
+  #   runs-on: ubuntu-latest
+  #   needs: [test, security]
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+
+  #     - name: Cache Docker layers
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: /tmp/.buildx-cache
+  #         key: ${{ runner.os }}-buildx-${{ github.sha }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-buildx-
+
+  #     - name: Build Docker image
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: .
+  #         push: false
+  #         tags: galahad-api:ci-${{ github.sha }}
+  #         cache-from: type=local,src=/tmp/.buildx-cache
+  #         cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+  #     - name: Move cache
+  #       run: |
+  #         rm -rf /tmp/.buildx-cache
+  #         mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  # dependency-review:
+  #   name: Dependency Review
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'pull_request'
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Dependency Review
+  #       uses: actions/dependency-review-action@v4
+  #       with:
+  #         fail-on-severity: high
+  # NOTE: Dependency Review requires GitHub Advanced Security (paid feature).
+  # Use 'safety check' in the security job instead for vulnerability scanning.

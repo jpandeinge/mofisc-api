@@ -1,0 +1,27 @@
+{
+  "name": "galahad-firebase-functions",
+  "version": "1.0.0",
+  "description": "Firebase Cloud Functions for Galahad notification system",
+  "main": "sendSMS.js",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "node --test *.test.js",
+    "audit": "npm audit --audit-level=low"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "overrides": {
+    "uuid@^9.0.1": "^11.1.1"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.4.0",
+    "firebase-functions": "^7.3.2",
+    "twilio": "^6.1.1"
+  },
+  "private": true
+}

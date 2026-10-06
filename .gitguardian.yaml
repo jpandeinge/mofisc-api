@@ -1,0 +1,20 @@
+# GitGuardian configuration
+# https://docs.gitguardian.com/internal-repositories-monitoring/integrations/ci_cd/github_actions
+
+version: 2
+
+# Paths to exclude from scanning
+paths-ignore:
+  - "**/*.md"
+  - "**/test_*.py"
+  - "tests/**"
+  - ".venv/**"
+  - "venv/**"
+  - "node_modules/**"
+
+# Specific commits to ignore (known false positives with test credentials)
+matches-ignore:
+  - name: "Test Firebase credentials in CI workflow"
+    match: "ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2plY3RfaWQiOiAidGVzdC1wcm9qZWN0Ig"
+    # This is a fake test credential removed in commit 4c23557
+    # Contains only test values: project_id: "test-project", private_key_id: "test-key-id"

@@ -1,0 +1,17 @@
+# Install training tools in a separate environment from the production API.
+accelerate==1.15.0
+datasets==5.0.1
+evaluate
+joblib
+numpy
+pandas
+pyarrow
+requests
+packaging
+pyyaml
+scikit-learn
+sentence-transformers==6.0.1
+torch==2.14.0
+transformers==5.17.0
+tqdm
+wandb

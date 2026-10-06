@@ -1,0 +1,296 @@
+services:
+  # Redis - Message Broker & Cache
+  redis:
+    image: redis:8-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - galahad-network
+
+  # FastAPI Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${DOCKER_TARGET:-development}
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      # Database (Supabase)
+      - DATABASE_URL=${DATABASE_URL}
+
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+
+      # Supabase
+      - USE_SUPABASE=${USE_SUPABASE}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=${REDIS_DB:-0}
+
+      # Celery
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+      # Firebase
+      - FIREBASE_CREDENTIALS_PATH=/app/.secrets/firebase-adminsdk.json
+      - FIREBASE_WEB_API_KEY=${FIREBASE_WEB_API_KEY}
+
+      # Email
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - FROM_EMAIL=${FROM_EMAIL}
+      - FROM_NAME=${FROM_NAME}
+
+      # SMS
+      - FIREBASE_SMS_CLOUD_FUNCTION_URL=${FIREBASE_SMS_CLOUD_FUNCTION_URL}
+      - SMS_API_SECRET
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+
+      # Sentry
+      - SENTRY_DSN=${SENTRY_DSN}
+      - SENTRY_ENVIRONMENT=${SENTRY_ENVIRONMENT}
+      - RELEASE=${RELEASE}
+
+      # Environment
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - PORT=${PORT:-8000}
+
+    depends_on:
+      redis:
+        condition: service_healthy
+
+    volumes:
+      - ./api:/app/api
+      - ./.secrets:/app/.secrets:ro
+      - ./logs:/app/logs
+
+    command: >
+      sh -c "
+        alembic upgrade head &&
+        uvicorn api.main:app --host 0.0.0.0 --port 8000 ${UVICORN_EXTRA_ARGS}
+      "
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+    networks:
+      - galahad-network
+
+  # Celery Worker - Background Task Processing
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${DOCKER_TARGET:-development}
+    command: celery -A api.app.celery_app worker --loglevel=info --concurrency=4 --queues=notifications --max-tasks-per-child=1000
+    environment:
+      # Database
+      - DATABASE_URL=${DATABASE_URL}
+
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=${REDIS_DB:-0}
+
+      # Celery
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+      # Firebase
+      - FIREBASE_CREDENTIALS_PATH=/app/.secrets/firebase-adminsdk.json
+      - FIREBASE_WEB_API_KEY=${FIREBASE_WEB_API_KEY}
+
+      # Email
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - FROM_EMAIL=${FROM_EMAIL}
+      - FROM_NAME=${FROM_NAME}
+
+      # SMS
+      - FIREBASE_SMS_CLOUD_FUNCTION_URL=${FIREBASE_SMS_CLOUD_FUNCTION_URL}
+      - SMS_API_SECRET
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+
+      # Sentry
+      - SENTRY_DSN=${SENTRY_DSN}
+      - SENTRY_ENVIRONMENT=${SENTRY_ENVIRONMENT}
+
+      # Environment
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+
+    depends_on:
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+    volumes:
+      - ./api:/app/api
+      - ./.secrets:/app/.secrets:ro
+      - ./logs:/app/logs
+
+    healthcheck:
+      test: ["CMD", "celery", "-A", "api.app.celery_app", "inspect", "ping", "-t", "10"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+
+    networks:
+      - galahad-network
+
+  # Celery Beat - Task Scheduler
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${DOCKER_TARGET:-development}
+    command: celery -A api.app.celery_app beat --loglevel=info
+    environment:
+      # Database
+      - DATABASE_URL=${DATABASE_URL}
+
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=${REDIS_DB:-0}
+
+      # Celery
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+      # Firebase
+      - FIREBASE_CREDENTIALS_PATH=/app/.secrets/firebase-adminsdk.json
+      - FIREBASE_WEB_API_KEY=${FIREBASE_WEB_API_KEY}
+
+      # Email
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - FROM_EMAIL=${FROM_EMAIL}
+
+      # Environment
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+
+    depends_on:
+      redis:
+        condition: service_healthy
+      celery-worker:
+        condition: service_healthy
+
+    volumes:
+      - ./api:/app/api
+      - ./.secrets:/app/.secrets:ro
+      - ./logs:/app/logs
+
+    networks:
+      - galahad-network
+
+  # Flower - Celery Monitoring Dashboard
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${DOCKER_TARGET:-development}
+    command: celery -A api.app.celery_app flower --port=5555 --loglevel=info
+    ports:
+      - "5555:5555"
+    environment:
+      # Database
+      - DATABASE_URL=${DATABASE_URL}
+
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=${REDIS_DB:-0}
+
+      # Celery
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+      # Firebase
+      - FIREBASE_CREDENTIALS_PATH=/app/.secrets/firebase-adminsdk.json
+      - FIREBASE_WEB_API_KEY=${FIREBASE_WEB_API_KEY}
+
+      # Email
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - FROM_EMAIL=${FROM_EMAIL}
+
+      # Environment
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+
+    depends_on:
+      redis:
+        condition: service_healthy
+      celery-worker:
+        condition: service_healthy
+
+    volumes:
+      - ./api:/app/api
+      - ./.secrets:/app/.secrets:ro
+      - ./logs:/app/logs
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5555/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+    networks:
+      - galahad-network
+
+volumes:
+  redis_data:
+
+networks:
+  galahad-network:
+    driver: bridge
